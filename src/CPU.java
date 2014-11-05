@@ -3,11 +3,13 @@
  */
 public class CPU {
     private Core[] _cores;
-    private Register _regis;
 
     public CPU(int cores, int registers){
         _cores = new Core[cores];
-        _regis = new Register(registers+1);
+        _cores[0] = new Core();
+        _cores[1] = new Core();
+        _cores[2] = new Core();
+        _cores[3] = new Core();
     }
 
     public void send(Job j){

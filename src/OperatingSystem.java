@@ -1,4 +1,4 @@
-import jdk.internal.util.xml.impl.ReaderUTF16;
+//import jdk.internal.util.xml.impl.ReaderUTF16;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -20,7 +20,10 @@ public class OperatingSystem {
 		
 		//emulator settings
 		String method = "SJF";
-		String path = "C:\\Users\\swema_000\\Desktop\\Eclipse Workspace\\Operating Systems\\src\\ugradPart1.txt";
+		
+		//cant use relative paths without some extra changes so need to explicitly tell Java where the file is
+		//String path = "C:\\Users\\swema_000\\Desktop\\Eclipse Workspace\\Operating Systems\\src\\ugradPart1.txt";
+		String path = "I:\\Users\\swema_000\\Documents\\GitHub\\OSMain\\src\\ugradPart1.txt";
 		
 		//scanner
 		Scanner s = new Scanner(System.in);
@@ -63,15 +66,26 @@ public class OperatingSystem {
 			}
 		}
 		
-		//Run boot loader (see OperatingSystemFunctions function class
+		//Run boot loader (see OperatingSystemFunctions function class)
 		OperatingSystemFunctions.BootLoader(hardDrive, path);
 		
-		System.out.print("Moving jobs from HD to RAM using " + method);
+		System.out.println("Moving jobs from HD to RAM using " + method);
 		OperatingSystemFunctions.LongTermScheduler(method, hardDrive, ram, readyQueue);
         System.out.println("Printing out PCB ReadyQueue:\n");
         for(int x = 0; x < readyQueue.size(); x++){
             System.out.println(readyQueue.get(x));
         }
-		//System.out.println("Test");
+        
+        //Enter main loop if jobs in Readyqueue (should always evaluate to true?)
+        if(!readyQueue.isEmpty()){
+        	//main loop
+        	while(true){
+        		//pass arguments to CPU 1-4
+        		//if process is done, move to terminate queue
+        		//else move to wait queue or I/O queue
+        		//if enough space for a new process in ram, add it
+        	}
+        }
+        
 	}
 }

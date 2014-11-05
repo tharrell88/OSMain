@@ -3,25 +3,14 @@
  */
 public class Core implements Runnable {
     private Job currentJob;
-    private int testInt;
-    private int sleepInt;
+	private Object[] register;
 
-    public Core(Job j){
-        this.currentJob = j;
-    }
-
-    public Core(int num, int sleep){
-        this.testInt = num;
-        this.sleepInt = sleep;
+    public Core(){
+        //0-3 registers A-D, 4 Accumulator 
+        register = new Object[5];
     }
 
     public void run(){
-        try{
-            for(int x = testInt; x < testInt+100; x++){
-                System.out.println("CORE " + coreNum)
-        }}catch (Exception e){
-
-        }
 
     }
 }
