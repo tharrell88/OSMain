@@ -30,6 +30,10 @@ public class Job {
 		_INSTRUCTIONS.add(ins);
 	}
 	
+	public int getID(){
+		return Integer.parseInt(_JOB_NUM);
+	}
+	
 	public String getHeader(){
 		return _HEADER;
 	}

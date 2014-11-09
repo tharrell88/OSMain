@@ -7,6 +7,7 @@ public class PCB {
     private String _HEADER;
     private int _JOB_POS;
     private int _JOB_SIZE;
+    public String ID;
     private Object data;
 
     public PCB(){
@@ -17,6 +18,8 @@ public class PCB {
         _HEADER = header;
         _JOB_POS = initial_position;
         _JOB_SIZE = job_size;
+         String[] temp = header.split(", ");
+         ID = temp[0];
     }
 
     //BEGIN GETTERS AND SETTERS
@@ -47,6 +50,12 @@ public class PCB {
 
     public void setData(Object o){
         data = o;
+    }
+    
+    public String next(RAM ram){
+    	String next = ram.load(_JOB_POS);
+    	_JOB_POS++;
+    	return next;
     }
 
     public static boolean exists(ArrayList<PCB> pcb_arr, String header){

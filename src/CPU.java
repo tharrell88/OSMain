@@ -13,10 +13,7 @@ public class CPU {
     }
 
     public void send(Job j){
-
-    }
-
-    public void decodeExecute(){
-
+    	//Find available core
+    	//Execute job on core
     }
 }
