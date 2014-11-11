@@ -15,6 +15,7 @@ public class OperatingSystem {
         ArrayList<PCB> waitQueue = new ArrayList<PCB>();
         ArrayList<PCB> termQueue = new ArrayList<PCB>();
         ArrayList<PCB> ioQueue = new ArrayList<PCB>();
+        CPU cpu = new CPU();
 		
 		boolean ready = false;
 		boolean done = false;
@@ -68,22 +69,17 @@ public class OperatingSystem {
 		//Run boot loader (see OperatingSystemFunctions function class)
 		OperatingSystemFunctions.BootLoader(hardDrive, path);
 		
-		while(!done){
-			
-			//TO DO: if there is room for a job, try to move a new job onto the RAM
-			System.out.println("Moving jobs from HD to RAM using " + method);
-			OperatingSystemFunctions.LongTermScheduler(method, hardDrive, ram, readyQueue);
-			
-	        for(int x = 0; x < readyQueue.size(); x++){
-	            System.out.println(readyQueue.get(x));
-	        }
+		while(!done){	        
+	        //MAIN LOOP START
 	        
-	        
-	        //Enter main loop if jobs in Readyqueue (should always evaluate to true?)
-	        		//pass arguments to CPU 1-4
-	        		//if process is done, move to terminate queue
-	        		//else move to wait queue or I/O queue
-	        		//if enough space for a new process in ram, add it
+	        //1) Start of loop. Check RAM.
+				//a) Is there anything ready to come out of wait or I/O queues? If so, move to ReadyQueue
+	        	//b) Is there enough room in the RAM for a new job? If so, run LTS.
+				//c) If no jobs are left on the HDD, RQ/IO/WQ, then finish running commands on core
+				//d) If there CPU is empty of jobs, end program and dump results
+			//2) Fetch jobs for CPU if CPU is ready for one
+				//a) Is there a core available? If so, fetch a job for it
+				//b) I
 		}  
 	}
 }

@@ -19,13 +19,10 @@ public class Core {
     public void setPCB(PCB pcb){
     	currentJob = pcb;
     }
-    
-    private void run(){
-    	while(running){
-    		decode(currentJob.next());
-    	}
+
+    public boolean hasJob(){
+    	return (currentJob != null ? true : false);
     }
-    
     //Step 1: Explode string, find action, target regs, val
     //Step 2: Execute action
     public void decode(String instruction){
@@ -36,7 +33,7 @@ public class Core {
     	int reg2 = getRegID(explodeIns[3]);
     	int value = Integer.parseInt(explodeIns[4]);
     	
-    	action(action, reg1, reg2, value, 1);
+    	execute(action, reg1, reg2, value, 1);
     }
     
     //Give it a letter to get which register you need
@@ -66,7 +63,7 @@ public class Core {
     }
     
     //commands
-    private void action(String action, int reg1, int reg2, int val, int processID){
+    private void execute(String action, int reg1, int reg2, int val, int processID){
     	switch(action){
     	case "add":
     		add(reg1, reg2);
