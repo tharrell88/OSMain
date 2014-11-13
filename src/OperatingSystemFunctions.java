@@ -168,4 +168,8 @@ public class OperatingSystemFunctions {
 			break;
 		}
 	}
+	
+	public static void swapQ(ArrayList<PCB> q1, ArrayList<PCB> q2, int pid){
+		
+	}
 }

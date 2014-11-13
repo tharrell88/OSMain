@@ -1,10 +1,12 @@
+import java.util.ArrayList;
+
 /**
  * Created by swema_000 on 10/8/2014.
  */
 public class Core {
+	
     private PCB currentJob;
 	private int[] register;
-	private boolean running;
 
     public Core(){
         //0-3 registers A-D, 4 Accumulator 
@@ -25,7 +27,7 @@ public class Core {
     }
     //Step 1: Explode string, find action, target regs, val
     //Step 2: Execute action
-    public void decode(String instruction){
+    public void decodeExecute(String instruction, ArrayList<PCB> ioQ, ArrayList<PCB> waitQ, ArrayList<PCB> termQ, ArrayList<PCB> rdyQ){
     	String[] explodeIns = instruction.split(", ");
     	int jobPos = Integer.parseInt(explodeIns[0]);
     	String action = explodeIns[1];
@@ -33,7 +35,7 @@ public class Core {
     	int reg2 = getRegID(explodeIns[3]);
     	int value = Integer.parseInt(explodeIns[4]);
     	
-    	execute(action, reg1, reg2, value, 1);
+    	execute(action, reg1, reg2, value, 1, ioQ, waitQ, termQ, rdyQ);
     }
     
     //Give it a letter to get which register you need
@@ -63,7 +65,7 @@ public class Core {
     }
     
     //commands
-    private void execute(String action, int reg1, int reg2, int val, int processID){
+private void execute(String action, int reg1, int reg2, int val, int processID, ArrayList<PCB> rdyQ, ArrayList<PCB> waitQ, ArrayList<PCB> termQ, ArrayList<PCB> ioQ){
     	switch(action){
     	case "add":
     		add(reg1, reg2);
@@ -76,6 +78,30 @@ public class Core {
     		break;
     	case "div":
     		div(reg1, reg2);
+    		break;
+    	case "_rd":
+    		ioMove(ioQ);
+    		break;
+    	case "_wr":
+    		ioMove(ioQ);
+    		break;
+    	case "_wt":
+    		wtMove(waitQ);
+    		break;
+    	case "sto":
+    		store(val);
+    		break;
+    	case "rcl":
+    		copyTo(reg1);
+    		break;
+    	case "nul":
+    		reset();
+    		break;
+    	case "stp":
+    		stop(rdyQ);
+    		break;
+    	case "err":
+    		err(termQ);
     		break;
     	default:
     		System.out.println("ERROR IN ACTION");
@@ -96,11 +122,34 @@ public class Core {
     }
     
     private void div(int reg1, int reg2){
-    	register[4] += (register[reg2] + register[reg1]);
+    	register[4] += (register[reg2] / register[reg1]);
     }
     
+    private void ioMove(ArrayList<PCB> ioQ){
+    	ioQ.add(currentJob);
+    	currentJob = null;
+    }
+    
+    private void wtMove(ArrayList<PCB> waitQ){
+    	waitQ.add(currentJob);
+    	currentJob = null;
+    }
+    
+    private void store(int val){
+    	register[4] = val;
+    }
+    
+    private void copyTo(int reg){
+    	register[reg] = register[4];
+    }
+    
+    private void stop(ArrayList<PCB> rdyQ){
+    	currentJob.saveState(register);
+    	rdyQ.add(currentJob);
+    	currentJob = null;
+    }
     //sets registers back to default
-    private void reset(){
+    public void reset(){
     	register[0] = 1;
         register[1] = 3;
         register[2] = 5;
@@ -108,7 +157,13 @@ public class Core {
         register[4] = 9;
     }
     
+    public void err(ArrayList<PCB> termQ){
+    	currentJob.saveState(register);
+    	termQ.add(currentJob);
+    	currentJob = null;
+    }
+    
     public String dump(){
-    	return "Ending Process " + currentJob.ID + ". Register Dump: " + register[0] + ", " + register[1] + ", " + register[2] + ", " + register[3] + ", " + register[4];
+    	return "Ending Process " + /*currentJob.ID +*/ ". Register Dump: " + register[0] + ", " + register[1] + ", " + register[2] + ", " + register[3] + ", " + register[4];
     }
 }

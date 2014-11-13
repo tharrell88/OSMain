@@ -11,10 +11,10 @@ public class OperatingSystem {
 		//RAM has a default max size of 100
 		HDD hardDrive = new HDD();
 		RAM ram = new RAM(100);
-        ArrayList<PCB> readyQueue = new ArrayList<PCB>();
-        ArrayList<PCB> waitQueue = new ArrayList<PCB>();
-        ArrayList<PCB> termQueue = new ArrayList<PCB>();
-        ArrayList<PCB> ioQueue = new ArrayList<PCB>();
+        ArrayList<PCB> rdyQ = new ArrayList<PCB>();
+        ArrayList<PCB> waitQ = new ArrayList<PCB>();
+        ArrayList<PCB> termQ = new ArrayList<PCB>();
+        ArrayList<PCB> ioQ = new ArrayList<PCB>();
         CPU cpu = new CPU();
 		
 		boolean ready = false;
@@ -69,7 +69,13 @@ public class OperatingSystem {
 		//Run boot loader (see OperatingSystemFunctions function class)
 		OperatingSystemFunctions.BootLoader(hardDrive, path);
 		
-		while(!done){	        
+		Core core1 = new Core();
+		core1.decodeExecute("0, div, A, D, 14", rdyQ, waitQ, termQ, ioQ);
+		System.out.println(core1.dump());
+		core1.reset();
+		System.out.println(core1.dump());
+		
+/*		while(!done){	        
 	        //MAIN LOOP START
 	        
 	        //1) Start of loop. Check RAM.
@@ -80,6 +86,7 @@ public class OperatingSystem {
 			//2) Fetch jobs for CPU if CPU is ready for one
 				//a) Is there a core available? If so, fetch a job for it
 				//b) I
-		}  
+			
+		}*/  
 	}
 }

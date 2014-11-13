@@ -8,7 +8,7 @@ public class PCB {
     private int _JOB_POS;
     private int _JOB_SIZE;
     public String ID;
-    private Object data;
+    private int[] register;
 
     public PCB(){
 
@@ -20,6 +20,7 @@ public class PCB {
         _JOB_SIZE = job_size;
          String[] temp = header.split(", ");
          ID = temp[0];
+         register = null;
     }
 
     //BEGIN GETTERS AND SETTERS
@@ -47,10 +48,6 @@ public class PCB {
         return _HEADER;
     }
     //END GETTERS AND SETTERS
-
-    public void setData(Object o){
-        data = o;
-    }
     
     public String next(RAM ram){
     	String next = ram.load(_JOB_POS);
@@ -67,5 +64,14 @@ public class PCB {
 
     public String toString(){
         return "PCB: " + _HEADER + " Current Pos: " + _JOB_POS;
+    }
+    
+    public void saveState(int[] reg){
+    	register = new int[5];
+    	register[0] = reg[0];
+    	register[1] = reg[1];
+    	register[2] = reg[2];
+    	register[3] = reg[3];
+    	register[4] = reg[4];
     }
 }
