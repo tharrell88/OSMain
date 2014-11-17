@@ -52,7 +52,7 @@ public class Core {
     	int reg2 = getRegID(explodeIns[3]);
     	int value = Integer.parseInt(explodeIns[4]);
     	
-    	execute(action, reg1, reg2, value, 1, ioQ, waitQ, termQ, rdyQ);
+    	execute(action, reg1, reg2, value, 1, rdyQ, waitQ, termQ, ioQ);
     }
     
     //Give it a letter to get which register you need
@@ -83,7 +83,7 @@ public class Core {
     
     //commands
 private void execute(String action, int reg1, int reg2, int val, int processID, ArrayList<PCB> rdyQ, ArrayList<PCB> waitQ, ArrayList<PCB> termQ, ArrayList<PCB> ioQ){
-	System.out.println(action);
+	//System.out.println(action);
     	switch(action){
     	case "add":
     		add(reg1, reg2);
@@ -145,7 +145,6 @@ private void execute(String action, int reg1, int reg2, int val, int processID, 
     
     private void ioMove(ArrayList<PCB> ioQ){
     	ioQ.add(currentJob);
-    	System.out.println(ioQ.size());
     	currentJob = null;
     }
     

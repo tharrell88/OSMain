@@ -31,6 +31,7 @@ public class OperatingSystem {
 		Scanner s = new Scanner(System.in);
 		
 		System.out.print("Operating System Emulator\nBy: Travis Harrell\n");
+		//System.out.println("ioQ size: " + ioQ.size());
 		
 		//Intro and settings loop
 		//Things to be added

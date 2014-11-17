@@ -58,7 +58,7 @@ public class OperatingSystemFunctions {
 	// Notes: Job header format -> Job #, numInstructions, priority
 	public static void LongTermScheduler(String method, HDD hd, RAM ram, ArrayList<PCB> pcb_arr){
 		boolean ram_is_full = false, done = false;
-
+		System.out.println("HELLO FROM LTS");
 		
 		switch(method){
 			case "SJF":
@@ -84,11 +84,9 @@ public class OperatingSystemFunctions {
 					
 					if(haveJob){
 						//Once we find a job, we need to dump the contents to the RAM
-						//???: Do we need to add the header for the job?
                         pcb_arr.add(new PCB(toDump.getHeader(), 100-ram.remainingMemory(), toDump.numIns()));
                         //System.out.println("Line 91: " + toDump.getHeader());
                         jobsRun.add(toDump.getHeader());
-                        //System.out.println("Line 93: " + last_job);
 
                         //Dump the job instructions onto the RAM
 						for(int i=0; i < toDump.numIns(); i++){
@@ -97,9 +95,7 @@ public class OperatingSystemFunctions {
 					//if we HAVENT found a job, exit loop
 					}else{done=true;}
 				}
-				
-				//System.out.println("\nFinished SJF task scheduling algorithm. Printing out results.");
-				//System.out.println(ram.toString());
+
 				//end SJF
 			break;
 			//begin Priority Queue
@@ -172,13 +168,11 @@ public class OperatingSystemFunctions {
 	public static void STS(String method, ArrayList<PCB> rdyQ, CPU cpu){
 		switch(method){
 		case "SJF":
-			PCB shortest = new PCB();
-			int index = -1;
+			int index = 0;
 			
-			for(int x = 0; x < rdyQ.size(); x++){
+			for(int x = 1; x < rdyQ.size(); x++){
 				//Equal shortest lengths will be eval'd as FCFS
-				if(rdyQ.get(x).getsize() < shortest.getsize()){
-					shortest = rdyQ.get(x);
+				if(rdyQ.get(x).getsize() < rdyQ.get(index).getsize()){
 					index = x;
 				}
 			}
