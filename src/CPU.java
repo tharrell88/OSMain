@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+
 
 /**
  * Created by swema_000 on 10/8/2014.
@@ -14,11 +14,13 @@ public class CPU {
         _cores[3] = new Core();
     }
     
-    //For phase 3, modify this to send to any open core
-    public boolean fetch(ArrayList<PCB> readyQueue){
-    	if(readyQueue.isEmpty()){return false;}
-    	
-    	_cores[0].setPCB(readyQueue.get(0));
-    	return true;
+    public boolean canAssign(){
+    	if(_cores[0].hasJob()){
+    		return false;
+    	}else{return true;}
+    }
+    
+    public Core core(int x){
+    	return _cores[x];
     }
 }

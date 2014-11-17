@@ -16,6 +16,8 @@ public class OperatingSystem {
         ArrayList<PCB> termQ = new ArrayList<PCB>();
         ArrayList<PCB> ioQ = new ArrayList<PCB>();
         CPU cpu = new CPU();
+        String STSmethod = "SJF";
+        int insLine = 0;
 		
 		boolean ready = false;
 		boolean done = false;
@@ -60,6 +62,13 @@ public class OperatingSystem {
 					System.out.println("What size do you wish to use for the RAM?");
 					ram.setMemorySize(s.nextInt());
 					break;
+				case 4:
+					System.out.println("What algorithm should be used for STS? (SJF, Priority, FCFS");
+					String o = s.next();
+					if(!o.equalsIgnoreCase("sjf") && !o.equalsIgnoreCase("fcfs") && !o.equalsIgnoreCase("priority")){
+						System.out.println("Invalid method");}
+					else{ method = o; }
+					break;
 				default:
 					System.out.println("Sorry, invalid choice.\n");
 					break;
@@ -68,25 +77,42 @@ public class OperatingSystem {
 		
 		//Run boot loader (see OperatingSystemFunctions function class)
 		OperatingSystemFunctions.BootLoader(hardDrive, path);
-		
-		Core core1 = new Core();
-		core1.decodeExecute("0, div, A, D, 14", rdyQ, waitQ, termQ, ioQ);
-		System.out.println(core1.dump());
-		core1.reset();
-		System.out.println(core1.dump());
-		
-/*		while(!done){	        
-	        //MAIN LOOP START
-	        
-	        //1) Start of loop. Check RAM.
-				//a) Is there anything ready to come out of wait or I/O queues? If so, move to ReadyQueue
-	        	//b) Is there enough room in the RAM for a new job? If so, run LTS.
-				//c) If no jobs are left on the HDD, RQ/IO/WQ, then finish running commands on core
-				//d) If there CPU is empty of jobs, end program and dump results
-			//2) Fetch jobs for CPU if CPU is ready for one
-				//a) Is there a core available? If so, fetch a job for it
-				//b) I
+		System.out.println("Entering main loop"); 
+
+		while(!done){
+			OperatingSystemFunctions.LongTermScheduler(method, hardDrive, ram, rdyQ);
 			
-		}*/  
+			//IF EVERYTHING IS EMPTY, DUMP AND EXIT LOOP
+			if(rdyQ.isEmpty() && ioQ.isEmpty() && waitQ.isEmpty() && ram.isEmpty()){
+				System.out.println("Dumping Term Q:");
+				for(int x = 0; x < termQ.size(); x++){
+					System.out.println(termQ.get(x));
+				}
+				break;
+			}
+			
+			if(cpu.canAssign()){
+				System.out.println("canAssign");
+				OperatingSystemFunctions.STS(STSmethod, rdyQ, cpu);
+			}
+			
+			insLine = cpu.core(0).next();
+			cpu.core(0).decodeExecute(ram.remove(insLine), ioQ, waitQ, termQ, rdyQ);
+			OperatingSystemFunctions.reposition(rdyQ, insLine);
+			OperatingSystemFunctions.decWaitIO(waitQ, ioQ, rdyQ);
+			
+			//System.out.println(cpu.core(0).job());
+			
+			if(cpu.core(0).job() != null){
+				if(cpu.core(0).job().insRun == cpu.core(0).job().getsize()){
+					termQ.add(cpu.core(0).job());
+					cpu.core(0).setPCB(null);
+				}
+			}
+		}
+		
+		//END PROGRAM
+		System.out.println("**********************************");
+		System.out.println("PROGRAM EXITING. THAT'S ALL FOLKS.");	
 	}
 }

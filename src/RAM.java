@@ -35,8 +35,8 @@ public class RAM {
 	}
 	
 	//removes item from contents arraylist
-	public void remove(int index){
-		_CONTENTS.remove(index);
+	public String remove(int index){
+		return _CONTENTS.remove(index);
 	}
 	
 	public int space(){
@@ -54,5 +54,9 @@ public class RAM {
 			ts += x + ": " +  _CONTENTS.get(x) + "\n";
 		}
 		return ts;
+	}
+	
+	public boolean isEmpty(){
+		return _CONTENTS.isEmpty();
 	}
 }

@@ -98,8 +98,8 @@ public class OperatingSystemFunctions {
 					}else{done=true;}
 				}
 				
-				System.out.println("\nFinished SJF task scheduling algorithm. Printing out results.");
-				System.out.println(ram.toString());
+				//System.out.println("\nFinished SJF task scheduling algorithm. Printing out results.");
+				//System.out.println(ram.toString());
 				//end SJF
 			break;
 			//begin Priority Queue
@@ -140,8 +140,8 @@ public class OperatingSystemFunctions {
 					
 				}
 				
-				System.out.println("\nFinished Priority task scheduling algorithm. Printing out results.");
-				System.out.println(ram.toString());
+				//System.out.println("\nFinished Priority task scheduling algorithm. Printing out results.");
+				//System.out.println(ram.toString());
 			break;
 			//
 			case "FCFS":
@@ -160,8 +160,8 @@ public class OperatingSystemFunctions {
 					}else{done=true;}
 				}
 				
-				System.out.println("\nFinished FCFS task scheduling algorithm. Printing out results.");
-				System.out.println(ram.toString());
+				//System.out.println("\nFinished FCFS task scheduling algorithm. Printing out results.");
+				//System.out.println(ram.toString());
 			break;
 			default:
 				System.out.println("Invalid method choice!");
@@ -169,7 +169,55 @@ public class OperatingSystemFunctions {
 		}
 	}
 	
-	public static void swapQ(ArrayList<PCB> q1, ArrayList<PCB> q2, int pid){
+	public static void STS(String method, ArrayList<PCB> rdyQ, CPU cpu){
+		switch(method){
+		case "SJF":
+			PCB shortest = new PCB();
+			int index = -1;
+			
+			for(int x = 0; x < rdyQ.size(); x++){
+				//Equal shortest lengths will be eval'd as FCFS
+				if(rdyQ.get(x).getsize() < shortest.getsize()){
+					shortest = rdyQ.get(x);
+					index = x;
+				}
+			}
+			
+			cpu.core(0).setPCB(rdyQ.remove(index));
+			break;
+		case "Priority":
+			break;
+		case "FCFS":
+			break;
+		default:
+			System.out.println("Error: Invalid STS Method");
+			break;
+		}
+	}
+	
+	public static void reposition(ArrayList<PCB> rdyQ, int pos){
+		for(int x = 0; x < rdyQ.size(); x++){
+			if(rdyQ.get(x).get_JOB_POS() < pos){
+				rdyQ.get(x).decPosition();
+			}
+		}
+	}
+	
+	public static void decWaitIO(ArrayList<PCB> waitQ, ArrayList<PCB> ioQ, ArrayList<PCB> rdyQ){
+		for(int x = 0; x < waitQ.size(); x++){
+			waitQ.get(x).counter--;
+			
+			if(waitQ.get(x).counter == 0){
+				rdyQ.add(waitQ.remove(x));
+			}
+		}
 		
+		for(int x = 0; x < ioQ.size(); x++){
+			ioQ.get(x).counter--;
+			
+			if(ioQ.get(x).counter == 0){
+				rdyQ.add(ioQ.remove(x));
+			}
+		}
 	}
 }

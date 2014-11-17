@@ -7,27 +7,44 @@ public class Core {
 	
     private PCB currentJob;
 	private int[] register;
+	
+	//False for not running, true for running something [PHASE 3?]
+	//private boolean flag;
 
     public Core(){
-        //0-3 registers A-D, 4 Accumulator 
+        //0-3 registers A-D, 4 Accumulator
         register = new int[5];
         register[0] = 1;
         register[1] = 3;
         register[2] = 5;
         register[3] = 7;
         register[4] = 9;
+        
+        currentJob = null;
+        
+        //flag = false;
     }
     
     public void setPCB(PCB pcb){
     	currentJob = pcb;
     }
-
+    
+    public int next(){
+    	return currentJob.get_JOB_POS();
+    }
+    
     public boolean hasJob(){
     	return (currentJob != null ? true : false);
     }
+    
+    public PCB job(){
+    	return currentJob;
+    }
+    
     //Step 1: Explode string, find action, target regs, val
     //Step 2: Execute action
     public void decodeExecute(String instruction, ArrayList<PCB> ioQ, ArrayList<PCB> waitQ, ArrayList<PCB> termQ, ArrayList<PCB> rdyQ){
+    	System.out.println(instruction);
     	String[] explodeIns = instruction.split(", ");
     	int jobPos = Integer.parseInt(explodeIns[0]);
     	String action = explodeIns[1];
@@ -66,6 +83,7 @@ public class Core {
     
     //commands
 private void execute(String action, int reg1, int reg2, int val, int processID, ArrayList<PCB> rdyQ, ArrayList<PCB> waitQ, ArrayList<PCB> termQ, ArrayList<PCB> ioQ){
+	System.out.println(action);
     	switch(action){
     	case "add":
     		add(reg1, reg2);
@@ -127,6 +145,7 @@ private void execute(String action, int reg1, int reg2, int val, int processID, 
     
     private void ioMove(ArrayList<PCB> ioQ){
     	ioQ.add(currentJob);
+    	System.out.println(ioQ.size());
     	currentJob = null;
     }
     
@@ -164,6 +183,6 @@ private void execute(String action, int reg1, int reg2, int val, int processID, 
     }
     
     public String dump(){
-    	return "Ending Process " + /*currentJob.ID +*/ ". Register Dump: " + register[0] + ", " + register[1] + ", " + register[2] + ", " + register[3] + ", " + register[4];
+    	return "Ending Process " + currentJob.ID + ". Register Dump: " + register[0] + ", " + register[1] + ", " + register[2] + ", " + register[3] + ", " + register[4];
     }
 }
